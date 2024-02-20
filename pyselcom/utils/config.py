@@ -1,3 +1,7 @@
+"""
+    Variable data used by Selcom API
+"""
+
 class Config(object):
 
     """
