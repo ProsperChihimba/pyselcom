@@ -11,7 +11,7 @@ from config import Config
 config = Config()
 
 
-# This functions encodes header digest data(Data sent to the Payload)
+# Function encodes header digest data(Data sent to the Payload)
 def digest_payload(timestamp: str, payload: dict) -> str:
 
     # timestamp is the current time
@@ -32,3 +32,11 @@ def digest_payload(timestamp: str, payload: dict) -> str:
 
 
     return base64Data
+
+
+# Function to return signed fiels array
+def signed_fiels(payload: dict) -> list:
+
+    keys = ",".join(payload.keys())
+
+    return keys
