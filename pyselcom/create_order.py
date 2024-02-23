@@ -35,9 +35,6 @@ class OrderMinimal(object):
             buyer_remarks: Optional[str] = None,
             merchant_remarks: Optional[str] = None,
             no_of_items: Optional[int] = 1,
-            header_colour: Optional[str] = None,
-            link_colour: Optional[str] = None,
-            button_colour: Optional[str] = None,
             expiry: Optional[str] = None,
         ) -> None:
         
@@ -51,9 +48,6 @@ class OrderMinimal(object):
         self._buyer_remarks = buyer_remarks
         self._merchant_remarks = merchant_remarks
         self._no_of_items = no_of_items
-        self._header_colour = header_colour
-        self._link_colour = link_colour
-        self._button_colour = button_colour
         self._expiry = expiry
 
 
