@@ -4,7 +4,7 @@ from utils.authentication import digest_payload, signed_fiels
 import requests
 import json
 import uuid
-from pytz import timezone
+import datetime
 import base64
 
 
@@ -41,7 +41,7 @@ class OrderMinimal(object):
             expiry: Optional[str] = None,
         ) -> None:
         
-        self.buyer_email = buyer_email
+        self._buyer_email = buyer_email
         self._buyer_name = buyer_name
         self._buyer_phone = buyer_phone
         self._amount = amount
@@ -69,35 +69,47 @@ class OrderMinimal(object):
             self._amount = value
 
 
-        # method for creating an minimal order
-        def order_minimal_request(self) -> dict:
-            time = timezone('Africa/Dar_es_Salaam')
-            signedKey = base64.b64encode(config.API_KEY.encode()).decode()
+    # method for creating an minimal order
+    def order_minimal_request(self) -> dict:
+        time = str(datetime.datetime.now())
+        signedKey = base64.b64encode(config.API_KEY.encode()).decode()
 
 
-            #making request to create a new minimal order in selcom API
-            url = config.SELCOM_BASE_URL + config.MINIMAL_ORDER_REQUEST_URL
+        #making request to create a new minimal order in selcom API
+        url = config.SELCOM_BASE_URL + config.MINIMAL_ORDER_REQUEST_URL
 
-            payload = json.dumps({
-                "vendor": config.VENDOR,
-                "order_id": uuid.uuid4().hex,
-                "buyer_email": self._buyer_email,
-                "buyer_name": self._buyer_name,
-                "buyer_phone": self._buyer_phone,
-                "amount": self._amount,
-                "currency": self._currency,
-                "no_of_items": self._no_of_items,
-            })
+        payload = {
+            "vendor": config.VENDOR,
+            "order_id": uuid.uuid4().hex,
+            "buyer_email": self._buyer_email,
+            "buyer_name": self._buyer_name,
+            "buyer_phone": self._buyer_phone,
+            "amount": self._amount,
+            "currency": self._currency,
+            "no_of_items": self._no_of_items,
+        }
 
-            headers = {
-                'Digest-Method': 'HS256',
-                'Digest': digest_payload(timestamp=timezone, payload=payload),
-                'Authorization': f'SELCOM {signedKey}',
-                'Signed-Fields': signed_fiels(payload=payload), 
-                'Timestamp': time, 
-                'Content-Type': 'application/json'
-            }
+        headers = {
+            'Digest-Method': 'HS256',
+            'Digest': digest_payload(timestamp=time, payload=payload),
+            'Authorization': f'SELCOM {signedKey}',
+            'Signed-Fields': signed_fiels(payload=payload), 
+            'Timestamp': time, 
+            'Content-Type': 'application/json'
+        }
 
-            response = requests.request("POST", url, headers=headers, data=payload)
+        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
-            return json.loads(response.text)
+        print(response.text)
+
+        return json.loads(response.text)
+        
+
+order = OrderMinimal(
+    buyer_email="example@email.com",
+    buyer_name="John Doe",
+    buyer_phone="+255712345678",
+    amount=1500
+)
+
+response = order.order_minimal_request()

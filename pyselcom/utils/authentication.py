@@ -1,6 +1,6 @@
 import base64
 import hmac
-from config import Config
+from .config import Config
 
 
 """
