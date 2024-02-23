@@ -80,3 +80,9 @@ class Config(object):
 
     #Configuration for creating a new minimal order for processing payments (does not support card payments)
     MINIMAL_ORDER_REQUEST_URL = 'v1/checkout/create-order-minimal'
+
+    # URL for process minimal order payment (Mobile money only)
+    WALLET_PAYMENT_URL = 'v1/checkout/wallet-payment'
+
+    # URL for process card order payment
+    CARD_PAYMENT_URL = 'v1/checkout/card-payment'
